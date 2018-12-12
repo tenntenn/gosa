@@ -14,4 +14,11 @@ In GOPATH
 
 ```
 $ skeleton pkgname
+pkgname
+├── pkgname.go
+├── pkgname_test.go
+└── testdata
+    └── src
+        └── a
+            └── a.go
 ```
