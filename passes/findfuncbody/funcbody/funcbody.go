@@ -96,7 +96,7 @@ func (f *Finder) findByValue(v ssa.Value) *FuncBody {
 		*/
 		//return f.findByValue(v.X)
 	case *ssa.Field:
-		dog.DumpRefferers(v, -1)
+		dog.DumpReferrers(v, -1)
 		//return f.findByValue(v.X)
 	case *ssa.Alloc:
 		//p := f.analyzePtr(v)

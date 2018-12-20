@@ -1,3 +1,6 @@
 module github.com/tenntenn/gosa/passes
 
-require golang.org/x/tools v0.0.0-20181218204010-d4971274fe38
+require (
+	github.com/tenntenn/gosa/dog v0.0.0-20181220110021-031d5520397f
+	golang.org/x/tools v0.0.0-20181220024903-92cdcd90bf52
+)

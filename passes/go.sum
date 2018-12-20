@@ -1,3 +1,7 @@
 github.com/tenntenn/gosa v0.0.0-20181212061631-d52e1aec8c9f h1:6msoyue+/eucXa4IzAr2MIhPEbvZQflFzLmAkMxETHo=
+github.com/tenntenn/gosa/dog v0.0.0-20181220110021-031d5520397f h1:LDBUIjCbySVdA+MDnHpgi/E/7FfaJWlC3LEXB3X89Tk=
+github.com/tenntenn/gosa/dog v0.0.0-20181220110021-031d5520397f/go.mod h1:DCdkCSocc/fgTgJfh/X9EFZHSzpT1yMh81yND2y2IFM=
 golang.org/x/tools v0.0.0-20181218204010-d4971274fe38 h1:e07OqjPO5oqQAJqid1fAwyMi/IK+hfSYrivMpzzAJtU=
 golang.org/x/tools v0.0.0-20181218204010-d4971274fe38/go.mod h1:n7NCudcB/nEzxVGmLbDWY5pfWTLqBcC2KZ6jyYvM4mQ=
+golang.org/x/tools v0.0.0-20181220024903-92cdcd90bf52 h1:oOIe9Zzq27JsS/3ACpGF1HwWnWNflZWT/3EvM7mtcEk=
+golang.org/x/tools v0.0.0-20181220024903-92cdcd90bf52/go.mod h1:n7NCudcB/nEzxVGmLbDWY5pfWTLqBcC2KZ6jyYvM4mQ=
