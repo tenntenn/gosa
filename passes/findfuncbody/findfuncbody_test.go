@@ -23,7 +23,7 @@ var Analyzer = &analysis.Analyzer{
 
 func run(pass *analysis.Pass) (interface{}, error) {
 	inspect := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
-	funcbody := pass.ResultOf[findfuncbody.Analyzer].(*funcbody.Finder)
+	finder := pass.ResultOf[findfuncbody.Analyzer].(*funcbody.Finder)
 
 	nodeFilter := []ast.Node{
 		(*ast.FuncLit)(nil),
@@ -35,6 +35,17 @@ func run(pass *analysis.Pass) (interface{}, error) {
 		(*ast.SelectorExpr)(nil),
 	}
 
+	type key struct {
+		filename string
+		line     int
+	}
+
+	type value struct {
+		body *funcbody.FuncBody
+		expr ast.Expr
+	}
+
+	found := map[key]*value{}
 	inspect.Preorder(nodeFilter, func(n ast.Node) {
 
 		expr, ok := n.(ast.Expr)
@@ -42,12 +53,22 @@ func run(pass *analysis.Pass) (interface{}, error) {
 			return
 		}
 
-		body := funcbody.Find(expr)
-		if body != nil {
-			pos := pass.Fset.Position(body.Parent.Pos())
-			pass.Reportf(expr.Pos(), "body is %s:%d", filepath.Base(pos.Filename), pos.Line)
+		body := finder.Find(expr)
+		pos := pass.Fset.Position(expr.Pos())
+		key := key{line: pos.Line, filename: pos.Filename}
+		if body != nil && found[key] == nil {
+			found[key] = &value{
+				expr: expr,
+				body: body,
+			}
 		}
 	})
+
+	for _, v := range found {
+		bodyPos := pass.Fset.Position(v.body.Parent.Pos())
+		filename := filepath.Base(bodyPos.Filename)
+		pass.Reportf(v.expr.Pos(), "body is %s:%d", filename, bodyPos.Line)
+	}
 
 	return nil, nil
 }

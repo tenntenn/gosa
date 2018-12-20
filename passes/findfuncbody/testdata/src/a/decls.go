@@ -1,14 +1,15 @@
 package a
 
-func g() {
+func g() { // want "body is decls.go:3"
 }
 
-func h() func() {
+func h() func() { // want "body is decls.go:6"
 	return func() { // want "body is decls.go:7"
 	}
 }
 
-type T struct{}
+type T struct{ F func() }
 
-func (_ *T) M() {
+func (t *T) M() { // want "body is decls.go:13"
+	t.F = func() {} // want "body is decls.go:14"
 }

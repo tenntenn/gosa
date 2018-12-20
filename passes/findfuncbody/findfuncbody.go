@@ -4,8 +4,8 @@ import (
 	"reflect"
 
 	"github.com/tenntenn/gosa/passes/findfuncbody/funcbody"
+	"github.com/tenntenn/gosa/passes/internal/buildssa"
 	"golang.org/x/tools/go/analysis"
-	"golang.org/x/tools/go/analysis/passes/inspect"
 )
 
 var Analyzer = &analysis.Analyzer{
@@ -14,15 +14,19 @@ var Analyzer = &analysis.Analyzer{
 	Run:        run,
 	ResultType: reflect.TypeOf(new(funcbody.Finder)),
 	Requires: []*analysis.Analyzer{
-		inspect.Analyzer,
+		buildssa.Analyzer,
 	},
 }
 
 const Doc = "findfuncbody is ..."
 
 func run(pass *analysis.Pass) (interface{}, error) {
+	ssa := pass.ResultOf[buildssa.Analyzer].(*buildssa.SSA).Pkg
 	return &funcbody.Finder{
-		TypesInfo: pass.TypesInfo,
 		Fset:      pass.Fset,
+		Files:     pass.Files,
+		TypesInfo: pass.TypesInfo,
+		Pkg:       pass.Pkg,
+		SSA:       ssa,
 	}, nil
 }
