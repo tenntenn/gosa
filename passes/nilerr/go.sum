@@ -1,0 +1,8 @@
+github.com/tenntenn/comment v0.0.0-20181121002213-5ca9d2df41d1 h1:x2YIpGGEzLRvIPuAwbgaME/YyUumLAlY3CN6BvsAf94=
+github.com/tenntenn/comment v0.0.0-20181121002213-5ca9d2df41d1/go.mod h1:EathzjUrWnMPz5E4yfCswi989Ykcx5JZy48KHjwMbx0=
+github.com/tenntenn/gosa v0.0.0-20181220110021-031d5520397f h1:yNpucDl8/oqsjx4jaxKTfQv32y4YpgpNCEGuldUm0a0=
+github.com/tenntenn/readonly v0.0.0-20181208054919-8e3cac171114 h1:XDtIObvHoUjehR1S1c+4d/Fnk9vQQF6n88f3wMenxH4=
+github.com/tenntenn/readonly v0.0.0-20181208054919-8e3cac171114/go.mod h1:QClGzduntKrX7xBATQpfsUEo0MYSeyde+3YJMgmKIOc=
+golang.org/x/tools v0.0.0-20181120234846-b5f2cae84da8/go.mod h1:n7NCudcB/nEzxVGmLbDWY5pfWTLqBcC2KZ6jyYvM4mQ=
+golang.org/x/tools v0.0.0-20190213135902-6bedcd10978a h1:ncPOGSo3avrTTUKHvDmwoS5E5of95qqNwftSXoxX+Wk=
+golang.org/x/tools v0.0.0-20190213135902-6bedcd10978a/go.mod h1:n7NCudcB/nEzxVGmLbDWY5pfWTLqBcC2KZ6jyYvM4mQ=
