@@ -32,7 +32,7 @@ func run(pass *analysis.Pass) (interface{}, error) {
 		for _, b := range funcs[i].Blocks {
 			for _, inst := range b.Instrs {
 				if isInvalidErrorf(pass, inst) {
-					pass.Reportf(inst.Pos(), "invalid arguments of xerrors.Errorf")
+					pass.Reportf(inst.Pos(), "unexpected format. format must end with ': %%w'")
 				}
 			}
 		}
@@ -57,7 +57,10 @@ func isInvalidErrorf(pass *analysis.Pass, inst ssa.Instruction) bool {
 		return false
 	}
 
-	typ := lastErr(pass, call.Pos())
+	typ, ok := lastErr(pass, call.Pos())
+	if !ok {
+		return false
+	}
 
 	if strings.HasSuffix(format, ": %w") && typ != nil && types.Implements(typ, errType) {
 		return false
@@ -111,27 +114,32 @@ func getFormat(args []ssa.Value) string {
 	return constant.StringVal(format.Value)
 }
 
-func lastErr(pass *analysis.Pass, pos token.Pos) types.Type {
+func lastErr(pass *analysis.Pass, pos token.Pos) (types.Type, bool) {
 	file := getFile(pass.Files, pos)
 	if file == nil {
-		return nil
+		return nil, false
 	}
 
 	path, exact := astutil.PathEnclosingInterval(file, pos, pos)
 	if !exact || len(path) == 0 {
-		return nil
+		return nil, false
 	}
 
 	callExpr, ok := path[0].(*ast.CallExpr)
 	if !ok {
-		return nil
+		return nil, false
+	}
+
+	if callExpr.Ellipsis != token.NoPos {
+		return nil, false
 	}
 
 	if len(callExpr.Args) < 2 {
-		return nil
+		return nil, true
 	}
 
-	return pass.TypesInfo.TypeOf(callExpr.Args[len(callExpr.Args)-1])
+	last := callExpr.Args[len(callExpr.Args)-1]
+	return pass.TypesInfo.TypeOf(last), true
 }
 
 func getFile(fs []*ast.File, pos token.Pos) *ast.File {
