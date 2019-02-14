@@ -59,3 +59,12 @@ var adotgoTempl = template.Must(template.New("a.go").Parse(`package a
 func main() {
 	// want "pattern"
 }`))
+
+var cmdMainTempl = template.Must(template.New("main.go").Parse(`package main
+
+import (
+	"{{.ImportPath}}"
+	"golang.org/x/tools/go/analysis/singlechecker"
+)
+
+func main() { singlechecker.Main({{.Pkg}}.Analyzer) }`))
