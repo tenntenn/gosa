@@ -32,7 +32,7 @@ func run(pass *analysis.Pass) (interface{}, error) {
 		for _, b := range funcs[i].Blocks {
 			for _, inst := range b.Instrs {
 				if isInvalidErrorf(pass, inst) {
-					pass.Reportf(inst.Pos(), "invalid arguments of xerrors.Errorf")
+					pass.Reportf(inst.Pos(), "unexpected format. format must end with ': %%w'")
 				}
 			}
 		}
