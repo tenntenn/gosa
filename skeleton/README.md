@@ -39,7 +39,7 @@ pkgname
             └── a.go
 ```
 
-### Create skeleton code without cmd directory
+### Create skeleton codes without cmd directory
 
 ```
 $ skeleton -cmd=false pkgname
