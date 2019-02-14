@@ -10,11 +10,14 @@ $ go get -u github.com/tenntenn/gosa/skeleton
 
 ## How to use
 
-### Create a skeleton codes in GOPATH
+### Create skeleton codes in GOPATH
 
 ```
 $ skeleton pkgname
 pkgname
+├── cmd
+│   └── pkgname
+│       └── main.go
 ├── pkgname.go
 ├── pkgname_test.go
 └── testdata
@@ -23,7 +26,7 @@ pkgname
             └── a.go
 ```
 
-### Create a skeleton codes with import path
+### Create skeleton codes with import path
 
 ```
 $ skeleton -path="github.com/tenntenn/pkgname"
@@ -36,14 +39,11 @@ pkgname
             └── a.go
 ```
 
-### Create cmd directory
+### Create skeleton code without cmd directory
 
 ```
-$ skeleton -cmd pkgname
+$ skeleton -cmd=false pkgname
 pkgname
-├── cmd
-│   └── pkgname
-│       └── main.go
 ├── pkgname.go
 ├── pkgname_test.go
 └── testdata
