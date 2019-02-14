@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"go/build"
 	"os"
@@ -12,7 +13,14 @@ import (
 )
 
 func main() {
-	if err := run(os.Args); err != nil {
+	var s Skeleton
+	flag.BoolVar(&s.Cmd, "cmd", true, "create cmd directory")
+	flag.StringVar(&s.ImportPath, "path", "", "import path")
+	flag.Parse()
+	s.ExeName = os.Args[0]
+	s.Args = flag.Args()
+
+	if err := s.Run(); err != nil {
 		fmt.Fprintln(os.Stderr, "Error:", err)
 		os.Exit(1)
 	}
@@ -23,38 +31,37 @@ type PkgInfo struct {
 	ImportPath string
 }
 
-func run(args []string) error {
+type Skeleton struct {
+	ExeName    string
+	Args       []string
+	Cmd        bool
+	ImportPath string
+}
+
+func (s *Skeleton) Run() error {
 
 	var info PkgInfo
 
-	if len(args) < 2 {
-		return errors.New("package must be specified")
+	if len(s.Args) < 1 {
+		if s.ImportPath != "" {
+			info.Pkg = path.Base(s.ImportPath)
+		} else {
+			return errors.New("package must be specified")
+		}
+	} else {
+		info.Pkg = s.Args[0]
 	}
-	info.Pkg = args[1]
 
 	cwd, err := os.Getwd()
 	if err != nil {
 		return err
 	}
 
-	for _, gopath := range filepath.SplitList(build.Default.GOPATH) {
-		if gopath == "" {
-			continue
-		}
-
-		src := filepath.Join(gopath, "src")
-		if strings.HasPrefix(cwd, src) {
-			rel, err := filepath.Rel(src, cwd)
-			if err != nil {
-				return err
-			}
-			info.ImportPath = path.Join(filepath.ToSlash(rel), info.Pkg)
-			break
-		}
-	}
+	info.ImportPath = s.importPath(cwd, &info)
 
 	if info.ImportPath == "" {
-		return errors.Errorf("%s must be executed in GOPATH", args[0])
+		const format = "%s must be executed in GOPATH or -path option must be specified"
+		return errors.Errorf(format, s.ExeName)
 	}
 
 	dir := filepath.Join(cwd, info.Pkg)
@@ -91,6 +98,55 @@ func run(args []string) error {
 	}
 	defer adotgo.Close()
 	if err := adotgoTempl.Execute(adotgo, info); err != nil {
+		return err
+	}
+
+	if s.Cmd {
+		if err := s.createCmd(dir, &info); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (s *Skeleton) importPath(cwd string, info *PkgInfo) string {
+
+	if s.ImportPath != "" {
+		return s.ImportPath
+	}
+
+	for _, gopath := range filepath.SplitList(build.Default.GOPATH) {
+		if gopath == "" {
+			continue
+		}
+
+		src := filepath.Join(gopath, "src")
+		if strings.HasPrefix(cwd, src) {
+			rel, err := filepath.Rel(src, cwd)
+			if err != nil {
+				return ""
+			}
+			return path.Join(filepath.ToSlash(rel), info.Pkg)
+		}
+	}
+
+	return ""
+}
+
+func (s *Skeleton) createCmd(dir string, info *PkgInfo) error {
+	cmdDir := filepath.Join(dir, "cmd", info.Pkg)
+	if err := os.MkdirAll(cmdDir, 0777); err != nil {
+		return err
+	}
+
+	cmdMain, err := os.Create(filepath.Join(cmdDir, "main.go"))
+	if err != nil {
+		return err
+	}
+	defer cmdMain.Close()
+
+	if err := cmdMainTempl.Execute(cmdMain, info); err != nil {
 		return err
 	}
 
