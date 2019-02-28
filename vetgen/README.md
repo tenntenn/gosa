@@ -147,5 +147,5 @@ func main() {
 ### run
 
 ```
-$ go vet -vettool=`which myvet` fmt
+$ go vet -vettool=$(which myvet) fmt
 ```

@@ -6,7 +6,7 @@ var srcTempl = template.Must(template.New("main.go").Parse(`// This file is gene
 // Do NOT modified this file.
 //
 // You can run this tool with go vet such as:
-//	go vet -vettool=`which mybet` pkgname
+//	go vet -vettool=$(which mybet) pkgname
 package main
 
 // go vet
