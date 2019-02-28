@@ -138,8 +138,8 @@ func main() {
 		unsafeptr.Analyzer,
 		unusedresult.Analyzer,
 
-		wraperrfmt.Analyzer, // add by genvet
-		nilerr.Analyzer,     // add by genvet
+		wraperrfmt.Analyzer, // add by vetgen
+		nilerr.Analyzer,     // add by vetgen
 	)
 }
 ```
