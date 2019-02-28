@@ -60,7 +60,7 @@ func main() {
 		unsafeptr.Analyzer,
 		unusedresult.Analyzer,
 		{{range .}}
-		{{.Pkg}}.Analyzer, // add by genvet
+		{{.Pkg}}.Analyzer, // add by vetgen
 		{{- end}}
 	)
 }`))
